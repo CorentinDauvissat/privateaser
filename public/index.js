@@ -146,6 +146,191 @@ const actors = [{
   }]
 }];
 
+//STEP 1 :
+
+function bookingPrice(){
+    for (var i = 0 ; i < 3 ; i++){
+		var j = 0;
+		
+		while(bars[j].id !== events[i].barId){
+			j++;}
+			
+		var timeComponent = events[i].time * bars[j].pricePerHour;
+		var personComponent = events[i].persons * bars[j].pricePerPerson;
+		var bookingPrice = timeComponent + personComponent;
+		events[i].price = bookingPrice;
+
+        console.log(events[i]);
+    }
+}
+
+//STEP 2 :
+
+function decreasingPricing(){
+    for (var i = 0 ; i < 3 ; i++){
+		var j = 0;
+		
+		while(bars[j].id !== events[i].barId){
+			j++;}
+			
+		var timeComponent = events[i].time * bars[j].pricePerHour;
+		var personComponent = events[i].persons * bars[j].pricePerPerson;
+		var bookingPrice = timeComponent + personComponent;
+
+		if (events[i].persons > 60){
+			bookingPrice = bookingPrice*50/100;}		//50% decreasing
+		else{
+			if (events[i].persons > 20){
+				bookingPrice = bookingPrice*70/100;}	//30% decreasing
+			else{
+				if (events[i].persons > 10){
+					bookingPrice = bookingPrice*90/100}	//10% decreasing
+        	}
+        }
+
+		events[i].price = bookingPrice;    
+
+        console.log(events[i]);
+    }
+}
+
+//STEP 3 :
+
+function commission(){
+    for (var i = 0 ; i < 3 ; i++){
+		var j = 0;
+		
+		while(bars[j].id !== events[i].barId){
+			j++;}
+			
+		var timeComponent = events[i].time * bars[j].pricePerHour;
+		var personComponent = events[i].persons * bars[j].pricePerPerson;
+		var bookingPrice = timeComponent + personComponent;
+
+		if (events[i].persons > 60){
+			bookingPrice = bookingPrice*50/100;}		//50% decreasing
+		else{
+			if (events[i].persons > 20){
+				bookingPrice = bookingPrice*70/100;}	//30% decreasing
+			else{
+				if (events[i].persons > 10){
+					bookingPrice = bookingPrice*90/100}	//10% decreasing
+        	}
+        }
+    	
+		var commission = bookingPrice*30/100;
+		var insurance = commission/2;
+		var treasury = events[i].persons;
+		var privateaser = commission - insurance - treasury;
+
+		events[i].price = bookingPrice;
+		events[i].commission.insurance = insurance;
+		events[i].commission.treasury = treasury;
+		events[i].commission.privateaser = privateaser;
+
+        console.log(events[i])
+    }
+}
+
+
+//STEP 4 :
+
+function deductible(){
+    for (var i = 0 ; i < 3 ; i++){
+		var j = 0;
+		
+		while(bars[j].id !== events[i].barId){
+			j++;}
+			
+		var timeComponent = events[i].time * bars[j].pricePerHour;
+		var personComponent = events[i].persons * bars[j].pricePerPerson;
+		var bookingPrice = timeComponent + personComponent;
+
+		if (events[i].persons > 60){
+			bookingPrice = bookingPrice*50/100;}		//50% decreasing
+		else{
+			if (events[i].persons > 20){
+				bookingPrice = bookingPrice*70/100;}	//30% decreasing
+			else{
+				if (events[i].persons > 10){
+					bookingPrice = bookingPrice*90/100}	//10% decreasing
+        	}
+        }
+    	
+		var commission = bookingPrice*30/100;
+		var insurance = commission/2;
+		var treasury = events[i].persons;
+		var privateaser = commission - insurance - treasury;
+
+		var deductible;
+
+		if (events[i].options.deductibleReduction){
+			deductible = events[i].persons;
+			bookingPrice += deductible;
+			privateaser += deductible;}
+
+		events[i].price = bookingPrice;
+		events[i].commission.insurance = insurance;
+		events[i].commission.treasury = treasury;
+		events[i].commission.privateaser = privateaser;
+
+        console.log(events[i])
+	}
+}
+
+//STEP 5 :
+
+function payTheActors(){
+    for (var i = 0 ; i < 3 ; i++){
+		var j = 0;
+		
+		while(bars[j].id !== events[i].barId){
+			j++;}
+			
+		var timeComponent = events[i].time * bars[j].pricePerHour;
+		var personComponent = events[i].persons * bars[j].pricePerPerson;
+		var bookingPrice = timeComponent + personComponent;
+
+		if (events[i].persons > 60){
+			bookingPrice = bookingPrice*50/100;}		//50% decreasing
+		else{
+			if (events[i].persons > 20){
+				bookingPrice = bookingPrice*70/100;}	//30% decreasing
+			else{
+				if (events[i].persons > 10){
+					bookingPrice = bookingPrice*90/100}	//10% decreasing
+        	}
+        }
+    	
+		var commission = bookingPrice*30/100;
+		var insurance = commission/2;
+		var treasury = events[i].persons;
+		var privateaser = commission - insurance - treasury;
+
+		var deductible;
+
+		if (events[i].options.deductibleReduction){
+			deductible = events[i].persons;
+			bookingPrice += deductible;
+			privateaser += deductible;}
+
+		events[i].price = bookingPrice;
+		events[i].commission.insurance = insurance;
+		events[i].commission.treasury = treasury;
+		events[i].commission.privateaser = privateaser;
+
+		actors[i].payment[0].amount -= bookingPrice;				//booker
+		actors[i].payment[1].amount += bookingPrice - commission;	//bar
+		actors[i].payment[2].amount += insurance;					//insurance
+		actors[i].payment[3].amount += treasury;					//treasury
+		actors[i].payment[4].amount += privateaser;					//privateaser
+
+        console.log(actors[i]);
+	}
+}
+
+payTheActors();
+
 console.log(bars);
 console.log(events);
 console.log(actors);
